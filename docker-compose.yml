@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  interview-service:
+    image: interview-service
+    ports:
+      - "3000:3000"
+    networks:
+      - review-mysql
+    build: .
+    environment:
+      - SERVER_PORT=3000
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=interview
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/interview
+    volumes:
+      - ./:/app
+      - ~/.m2:/root/.m2
+    working_dir: /
+    command: mvn spring-boot:run
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0.25
+    platform: linux/x86_64
+    command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - review-mysql
+    environment:
+      - TZ=UTC
+      - MYSQL_ROOT_PASSWORD=interview
+      - MYSQL_DATABASE=interview
+    healthcheck:
+      test: ["CMD","mysqladmin","ping","-h","localhost"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  db-data:
+
+networks:
+  review-mysql:
+    driver: bridge
