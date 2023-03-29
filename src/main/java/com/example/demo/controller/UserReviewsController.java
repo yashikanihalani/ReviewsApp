@@ -17,16 +17,19 @@ public class UserReviewsController {
     private UserReviewsRepository userReviewRepo;
 
     @GetMapping("/reviews")
+    //return all reviews
     public List<UserReviews> getUserReviews(){
         return userReviewRepo.findAll();
     }
 
     @GetMapping("/reviews/{id}")
+    //return review by id
     public Optional<UserReviews> getUserReviewsById(@PathVariable(value = "id") String id){
             return userReviewRepo.findById(id);
     }
 
     @DeleteMapping("/reviews/{id}")
+    //delete review by id
     public String deleteUserReviewById(@PathVariable(value = "id")String id){
         Optional<UserReviews> userReviews = userReviewRepo.findById(id);
         if(userReviews.isPresent()){

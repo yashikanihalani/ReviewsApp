@@ -11,12 +11,15 @@ public class MyRunner implements CommandLineRunner{
     @Autowired
     private UserReviewsRepository userReviewRepo;
 
+    //Fetch value of review api stored in application properties file
     @Value("${reviewSite.resourceUrl}")
     String resourceUrl;
     ImportService importService = new ImportService();
 
     @Override
     public void run(String...args) throws Exception {
+
+        //import all reviews on app startup using import service
         importService.importReviews(resourceUrl,userReviewRepo);
 
     }
